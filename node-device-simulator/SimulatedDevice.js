@@ -1,4 +1,5 @@
 'use strict';
+
 var fs = require('fs'), 
     parse = require('csv-parse'),
     nconf = require('nconf');
@@ -14,10 +15,13 @@ var clientFromConnectionString = require('azure-iot-device-amqp').clientFromConn
 var Message = require('azure-iot-device').Message;
 
 var client = clientFromConnectionString(connectionString);
+var csvFile = process.argv[2] || nconf.get("fileName");
 
 function printResultFor(op) {
     return function printResult(err, res) {
-        if (err) console.log(op + ' error: ' + err.toString());
+        if (err) {
+            console.log(op + ' error: ' + err.toString());
+        }
         if (res) console.log(op + ' status: ' + res.constructor.name);
     };
 }
@@ -41,15 +45,17 @@ var connectCallback = function (err) {
                 // Send device message to IoT Hub client
                 client.sendEvent(message, printResultFor('send'));
 
+                console.log(x);
                 x++;
-                if (x == data.length) clearInterval(interval);
-                
-
+                if (x == data.length) {
+                    clearInterval(interval);
+                }     
             }, 100);
 
         });
 
-        fs.createReadStream('Results_10000201.csv').pipe(parser);
+        console.log("Reading " + csvFile);
+        fs.createReadStream(csvFile).pipe(parser);
 
   }
 };
