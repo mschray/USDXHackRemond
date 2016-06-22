@@ -1,0 +1,21 @@
+{
+  "name": "node-device-simulator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Ryan Joy <ryanjoy@microsoft.com>",
+  "license": "ISC",
+  "dependencies": {
+    "azure-event-hubs": "0.0.2",
+    "azure-iot-device": "^1.0.8",
+    "azure-iot-device-amqp": "^1.0.8",
+    "azure-iothub": "^1.0.10",
+    "csv-parse": "^1.1.1",
+    "nconf": "^0.8.4",
+    "node-csv": "^0.1.2"
+  }
+}
