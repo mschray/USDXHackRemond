@@ -1,0 +1,4 @@
+{
+    "connectionString" : "<Connedtion string for IoT Hub>",
+    "eventName" : "Takeda"
+}

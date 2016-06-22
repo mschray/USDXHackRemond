@@ -3,6 +3,7 @@
 
 # Project files
 *.csv
+config.json
 
 # User-specific files
 *.suo
