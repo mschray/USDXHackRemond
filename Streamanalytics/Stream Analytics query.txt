@@ -1,0 +1,38 @@
+SELECT
+    id, booth_visit, cat_subcat, left_badgeId,left_email,left_firstname, left_flags,
+   	left_initials,
+	left_lastname,
+	left_matchShortId,
+	left_maxRssi,
+	left_missing_results,
+	left_playerShortId,
+	left_tickCount, 
+ right_badgeId,
+	right_email,
+	right_firstname,
+	right_flags,
+	right_initials,
+	right_lastname,
+	right_matchShortId,
+	right_maxRssi, 
+	right_missing_results,   
+ 	right_playerShortId,
+	right_tickCount,
+	[status],
+	[eventName]    
+INTO
+    ToSql
+FROM
+    IOTInbound
+ 
+SELECT
+	*
+INTO
+	ToDocDB
+FROM
+	IOTInbound
+
+SELECT
+	*
+INTO
+	toPowerBI
