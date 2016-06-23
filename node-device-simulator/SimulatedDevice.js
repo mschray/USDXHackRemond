@@ -45,7 +45,7 @@ var connectCallback = function (err) {
                 // Send device message to IoT Hub client
                 client.sendEvent(message, printResultFor('send'));
 
-                console.log(x);
+                console.log(data[x].id);
                 x++;
                 if (x == data.length) {
                     clearInterval(interval);
