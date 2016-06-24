@@ -4,19 +4,24 @@ var fs = require('fs'),
     parse = require('csv-parse'),
     nconf = require('nconf');
 
-    // Create nconf environtment 
+// Create nconf environment to load keys and connections strings
+// which should not end up on GitHub
     nconf 
         .file({ file: './config.json' }) 
         .env(); 
 
-var connectionString = nconf.get("connectionString");
-
-var clientFromConnectionString = require('azure-iot-device-amqp').clientFromConnectionString;
-var Message = require('azure-iot-device').Message;
-
-var client = clientFromConnectionString(connectionString);
+// load file name/path from console cmd args or config.json
 var csvFile = process.argv[2] || nconf.get("fileName");
 
+// configure and instantiate the Azure IoT client and message
+var connectionString = nconf.get("connectionString");
+var clientFromConnectionString = require('azure-iot-device-amqp').clientFromConnectionString;
+var Message = require('azure-iot-device').Message;
+var client = clientFromConnectionString(connectionString);
+
+// *****
+// Util method to print result of Azure IoT Hub .send() method to the console
+// *****
 function printResultFor(op) {
     return function printResult(err, res) {
         if (err) {
@@ -32,12 +37,18 @@ var connectCallback = function (err) {
     } else {
         console.log('Client connected');
 
-        var eventName = nconf.get("eventName")
+        // Client data does not include unique event name;
+        // We're going to grab an "eventName" value from config.json
+        var eventName = nconf.get("eventName");
+
+        // Take the piped array data from fs.createReadStream and iterative over each line.
+        // Using setInterval to throttle, send data to the IoT Hub for each row.
         var parser = parse({delimiter: ',', columns: true}, function(err, data){
             
             var x = 0;
             var interval = setInterval( function (){
 
+                // add "eventName" value from config.json to each record
                 data[x]["eventName"] = eventName;
 
                 var message = new Message(JSON.stringify(data[x]));
@@ -49,7 +60,7 @@ var connectCallback = function (err) {
                 x++;
                 if (x == data.length) {
                     clearInterval(interval);
-                }     
+                }
             }, 100);
 
         });
@@ -60,4 +71,5 @@ var connectCallback = function (err) {
   }
 };
 
+// Open a connection to Azure IoT hub
 client.open(connectCallback);
